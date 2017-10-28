@@ -33,6 +33,9 @@
 		<!-- [PIPELINE] -->
 		<repo.with.binaries>http://localhost:8081/artifactory/libs-release-local</repo.with.binaries>
 		<project.docker.version>v1</project.docker.version>
+		<DOCKER_REGISTRY_ORGANIZATION>asokjp</DOCKER_REGISTRY_ORGANIZATION>
+		<DOCKER_SERVER_ID>docker-repo</DOCKER_SERVER_ID>
+		<DOCKER_REGISTRY_URL>https://index.docker.io/v1/</DOCKER_REGISTRY_URL>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -123,43 +126,61 @@
 						<groupId>org.springframework.boot</groupId>
 						<artifactId>spring-boot-maven-plugin</artifactId>
 					</plugin>
-						<plugin>
-					<groupId>io.fabric8</groupId>
-					<artifactId>fabric8-maven-plugin</artifactId>
-					<version>3.5.31</version>
+					<plugin>
+				<groupId>com.spotify</groupId>
+				<artifactId>docker-maven-plugin</artifactId>
+				<version>0.4.11</version>
+				<goals>
+							<goal>build</goal>
+							<goal>push</goal>
+						</goals>
 					<configuration>
-						<chart>config-server</chart>
-						<outputDir>target</outputDir>
-						<images>
-							<image>
-								<name>docker.io/asokjp/${project.artifactId}-${project.docker.version}</name>
-								  
-								<build>
-									<dockerFileDir>.</dockerFileDir>
-									<assembly>
-										<descriptorRef>artifact-with-dependencies</descriptorRef>
-									</assembly>
-								</build>
-							</image>
-						</images>
-						<authConfig>
-      									<username>asokjp</username>
-      									<password>Lalithamma@99516</password>
-    								</authConfig>
-					</configuration>
-					<executions>
-						<execution>
-							<id>start</id>
-							<phase>pre-integration-test</phase>
-							<goals>
-								<!-- "build" should be used to create the images with the artifact -->
-								<goal>resource</goal>
-								<goal>helm</goal>
-								<goal>build</goal>
-							</goals>
-						</execution>
-					</executions>
-				</plugin>
+					<serverId>${DOCKER_SERVER_ID}</serverId>
+							<registryUrl>${DOCKER_REGISTRY_URL}</registryUrl>
+							<imageName>${DOCKER_REGISTRY_ORGANIZATION}/${project.artifactId}</imageName>
+					<dockerDirectory>${project.basedir}/src/main/docker</dockerDirectory>
+					<resources>
+						<resource>
+							<targetPath>/</targetPath>
+							<directory>${project.build.directory}</directory>
+							<include>${project.build.finalName}.jar</include>
+						</resource>
+					</resources>
+				  <imageTags>
+								<imageTag>${project.version}</imageTag>
+								<imageTag>latest</imageTag>
+							</imageTags>
+				</configuration>
+				<executions>
+							<execution>
+								<id>build-image</id>
+								<phase>package</phase>
+								<goals>
+									<goal>build</goal>
+								</goals>
+							</execution>
+							<execution>
+								<id>push-latest-image</id>
+								<phase>deploy</phase>
+								<goals>
+									<goal>push</goal>
+								</goals>
+								<configuration>
+									<imageName>${DOCKER_REGISTRY_ORGANIZATION}/${project.artifactId}:latest</imageName>
+								</configuration>
+							</execution>
+							<execution>
+								<id>push-versioned-image</id>
+								<phase>deploy</phase>
+								<goals>
+									<goal>push</goal>
+								</goals>
+								<configuration>
+									<imageName>${DOCKER_REGISTRY_ORGANIZATION}/${project.artifactId}:${project.version}</imageName>
+								</configuration>
+							</execution>
+						</executions>
+			</plugin>
 					
 				</plugins>
 			</build>
