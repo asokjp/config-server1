@@ -1,0 +1,37 @@
+server:
+  port: 8888
+spring:
+  application:
+    name: configserver
+  cloud:
+    config:
+      server:
+        git:
+          uri:  https://asokjp@bitbucket.org/asokjp/pocconfig.git
+          username: asokjp
+          password: lalithamma
+          search-paths: helloworld,helloworld/dev,helloworld/test,helloworld/prod,claimantservice,claimantservice/dev,claimantservice/prod,claimantservice/test,claimantservice/integration
+          clone-on-start: true
+    bus:
+      enabled: false
+  pid:
+    file: config.pid        
+encrypt:
+  keyStore:
+    location: classpath:/server.jks
+    password: changeit
+    alias: configkey
+    secret: changeit
+    
+---
+spring:
+  profiles: dev
+  cloud:
+    bus:
+      enabled: false
+   
+    
+
+
+    
+    

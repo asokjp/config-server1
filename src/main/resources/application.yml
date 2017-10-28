@@ -1,0 +1,5 @@
+server:
+  undertow:
+    io-threads: 15
+    worker-threads: 150
+   
