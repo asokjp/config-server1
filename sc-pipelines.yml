@@ -3,12 +3,3 @@
 # on the STAGE environment to pass
 
 # lowercase name of the environment
-test:
-  # list of required services
-  services:
-    - type: claim-contracts
-      name: claim-contracts
-stage:
-  services:
-    - type: claim-contracts
-      name: claim-contracts
