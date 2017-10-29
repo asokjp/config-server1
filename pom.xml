@@ -145,32 +145,36 @@
 				</executions>
 					</plugin>
 					 
-					<plugin>
-				<groupId>com.spotify</groupId>
-				<artifactId>docker-maven-plugin</artifactId>
-				<version>0.4.11</version>
-				<goals>
+				<plugin>
+						<groupId>com.spotify</groupId>
+						<artifactId>docker-maven-plugin</artifactId>
+						<version>0.4.11</version>
+						<goals>
 							<goal>build</goal>
 							<goal>push</goal>
 						</goals>
-					<configuration>
-					<serverId>${DOCKER_SERVER_ID}</serverId>
+						<configuration>
+							<serverId>${DOCKER_SERVER_ID}</serverId>
 							<registryUrl>${DOCKER_REGISTRY_URL}</registryUrl>
 							<imageName>${DOCKER_REGISTRY_ORGANIZATION}/${project.artifactId}</imageName>
-					<dockerDirectory>${project.basedir}/src/main/docker</dockerDirectory>
-					<resources>
-						<resource>
-							<targetPath>/</targetPath>
-							<directory>${project.build.directory}</directory>
-							<include>${project.build.finalName}.jar</include>
-						</resource>
-					</resources>
-				  <imageTags>
+							<baseImage>frolvlad/alpine-oraclejdk8:slim</baseImage>
+							<imageTags>
 								<imageTag>${project.version}</imageTag>
 								<imageTag>latest</imageTag>
 							</imageTags>
-				</configuration>
-				<executions>
+							<env>
+								<SYSTEM_PROPS>-Dfoo=bar</SYSTEM_PROPS>
+							</env>
+							<entryPoint>["sh", "-c", "java $${SYSTEM_PROPS} -Djava.security.egd=file:/dev/./urandom -jar /${project.build.finalName}.jar"]</entryPoint>
+							<resources>
+								<resource>
+									<targetPath>/</targetPath>
+									<directory>${project.build.directory}</directory>
+									<include>${project.build.finalName}.jar</include>
+								</resource>
+							</resources>
+						</configuration>
+						<executions>
 							<execution>
 								<id>build-image</id>
 								<phase>package</phase>
@@ -199,7 +203,7 @@
 								</configuration>
 							</execution>
 						</executions>
-			</plugin>
+					</plugin>
 					
 				</plugins>
 			</build>
@@ -218,9 +222,13 @@
 						<version>${maven-surefire.version}</version>
 						<configuration>
 							<includes>
-								<include>**/contracttests/**/*Tests.java</include>
-								<include>**/contracttests/**/*Test.java</include>
+								<include>**/*Tests.java</include>
+								<include>**/*Test.java</include>
 							</includes>
+							<excludes>
+								<exclude>**/smoke/**</exclude>
+								<exclude>**/e2e/**</exclude>
+							</excludes>
 						</configuration>
 					</plugin>
 				</plugins>
@@ -240,9 +248,13 @@
 						<version>${maven-surefire.version}</version>
 						<configuration>
 							<includes>
-								<include>smoke/**/*Tests.java</include>
-								<include>smoke/**/*Test.java</include>
+								<include>**/*Tests.java</include>
+								<include>**/*Test.java</include>
 							</includes>
+							<excludes>
+								<exclude>**/smoke/**</exclude>
+								<exclude>**/e2e/**</exclude>
+							</excludes>
 						</configuration>
 					</plugin>
 				</plugins>
@@ -262,9 +274,13 @@
 						<version>${maven-surefire.version}</version>
 						<configuration>
 							<includes>
-								<include>e2e/**/*Tests.java</include>
-								<include>e2e/**/*Test.java</include>
+								<include>**/*Tests.java</include>
+								<include>**/*Test.java</include>
 							</includes>
+							<excludes>
+								<exclude>**/smoke/**</exclude>
+								<exclude>**/e2e/**</exclude>
+							</excludes>
 						</configuration>
 					</plugin>
 				</plugins>
