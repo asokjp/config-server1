@@ -16,6 +16,11 @@ spec:
           image: {{dockerOrg}}/{{appName}}:{{version}}
           ports:
           - containerPort: 8888
+          env:
+          - name: PORT
+            value: "8888"
+          - name: SYSTEM_PROPS # additional options to be passed to the running process
+            value: "{{systemProps}}"
           livenessProbe:
             httpGet:
               path: /healthcheck
