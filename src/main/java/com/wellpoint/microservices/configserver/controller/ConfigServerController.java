@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class ConfigServerController {
 	
-	@RequestMapping(value = "/healthcheck", method = RequestMethod.GET)
+	@RequestMapping(value = "/health", method = RequestMethod.GET)
 	public String healthCheck()
 
 	{
