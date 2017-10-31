@@ -16,7 +16,7 @@ spring:
           uri:  https://asokjp@bitbucket.org/asokjp/pocconfig.git
           username: asokjp
           password: lalithamma
-          search-paths: helloworld,helloworld/dev,helloworld/test,helloworld/prod,claimantservice,claimantservice/dev,claimantservice/prod,claimantservice/test,claimantservice/integration
+          search-paths: helloworld,helloworld/dev,helloworld/test,helloworld/prod,claimantservice,claimantservice/dev,claimantservice/prod,claimantservice/test,claimantservice/integration,claimantservice/smoke,claimantservice/kubernetes
           clone-on-start: true
     bus:
       enabled: false
