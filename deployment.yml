@@ -68,18 +68,6 @@ spec:
           value: "8888"
         - name: SYSTEM_PROPS # additional options to be passed to the running process
           value: "{{systemProps}}"
-        livenessProbe:
-          httpGet:
-            path: /health
-            port: 8888
-          initialDelaySeconds: 30
-          periodSeconds: 3
-        readinessProbe:
-          httpGet:
-            path: /health
-            port: 8888
-          initialDelaySeconds: 30
-          periodSeconds: 3
         image: docker.io/istio/proxy_debug:0.2.4
         imagePullPolicy: IfNotPresent
         name: istio-proxy
