@@ -10,4 +10,22 @@ spec:
     - port: 8888
   selector:
     name: {{appName}}
-  type: LoadBalancer
+---
+###########################################################################
+# Ingress resource (gateway)
+##########################################################################
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: configserver-gateway
+  annotations:
+    kubernetes.io/ingress.class: "istio"
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /health
+        backend:
+          serviceName: configserver
+          servicePort: 8888    
+---
