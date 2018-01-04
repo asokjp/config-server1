@@ -24,8 +24,8 @@ spec:
   rules:
   - http:
       paths:
-      - path: /health
+      - path: /{{appName}}health
         backend:
-          serviceName: configserver
+          serviceName: {{appName}}
           servicePort: 8888    
 ---
