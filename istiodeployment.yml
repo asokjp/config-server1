@@ -1,3 +1,19 @@
+##################################################################################################
+# config service
+##################################################################################################
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{appName}}
+  labels:
+    app: {{appName}}
+spec:
+  ports:
+  - port: 8888
+    name: http
+  selector:
+    app: {{appName}}
+---
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
@@ -9,7 +25,6 @@ spec:
       labels:
         app: {{appName}}
         version: {{version}}
-        name: {{appName}}
     spec:
       containers:
       - name: {{containerName}}
@@ -18,25 +33,6 @@ spec:
         ports:
         - containerPort: 8888
 ---
-##################################################################################################
-# config service
-##################################################################################################
-apiVersion: v1
-kind: Service
-metadata:
-  name: {{appName}}
-  labels:
-    name: {{appName}}
-    visualize: "true"
-spec:
-  ports:
-    - port: 8888
-  selector:
-    name: {{appName}}
----
-###########################################################################
-# Ingress resource (gateway)
-##########################################################################
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
@@ -50,5 +46,5 @@ spec:
       - path: /{{appName}}health
         backend:
           serviceName: {{appName}}
-          servicePort: 8888    
+          servicePort: 8888
 ---
