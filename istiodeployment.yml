@@ -25,6 +25,7 @@ spec:
       labels:
         app: {{appName}}
         version: {{version}}
+        name: {{appName}}
     spec:
       containers:
       - name: {{containerName}}
